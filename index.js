@@ -16,6 +16,17 @@ mongoose.connect("mongodb+srv://sahilM2405:sahil2405@cluster0.t7ohnod.mongodb.ne
 
 
 const db = mongoose.connection;
+mongoose.set('strictQuery',false);
+const connectDB=async()=>{
+  try{
+    const conn=await mongoose.connect(process.env.MONGO_URL);
+    console.log('MongoDB connected ');
+  }catch(error){
+    console.log(error);
+    process.exit(1);
+  }
+ 
+}
 
 db.on("error", (error) => {
   console.error("Connection error:", error);
@@ -162,7 +173,8 @@ app.get("/about", function(req, res){
 });
 
 
-const port=3000;
-app.listen(port, function() {
-  console.log("Server started on port 3000");
+connectDB.then(()=>{
+  app.listen(PORT,()=>{
+    console.log('Listening on port ${PORT}');
+  });
 });
